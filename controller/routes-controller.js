@@ -6,11 +6,13 @@ const mongoose = require("mongoose")
 const jwt = require("jsonwebtoken");
 const User = require('../models/usermodels.js');
 
-let JWT_SECRET = process.env.JWT_SECRET;
+
+
+let JWT_SECRET = "my little secret";
 let maxAge = 60*60*4;
 
 const generateToken = ({_id}) =>{
-  const token = jwt.sign(_id, JWT_SECRET,{maxAge: maxAge});
+  const token = jwt.sign({_id}, JWT_SECRET,{expiresIn: maxAge});
   return token;
 }
 
@@ -22,7 +24,7 @@ router.get('/',(req,res)=>{
   res.send("this is home page")
 });
 router.get('/sign-up',(req,res)=>{
-
+res.sendFile(path.resolve(__dirname,'../views/sign-up.html'))
 });
 router.get('/sign-in',(req,res)=>{
   res.send('sign-in get')
@@ -37,20 +39,17 @@ router.post('/sign-up',async(req,res)=>{
 const { email, Tel, password} = req.body;
 try{
   const newUser = await User.create(req.body);
+  //
   const newUserToken = await generateToken(newUser);
-  res.cookie(userJWT, newUserToken,{httpOnly: true,maxAge: maxAge * 1000 });
-  res.status(200).json(newUser)
+  //send token
+  res.cookie("userJWT", newUserToken,{httpOnly: true,maxAge: maxAge * 1000 });
+  //send user
+  res.status(200).json(newUser);
 
 }catch(err){
-  res.status(500).send("could not save user")
+  console.log(err)
+  res.status(500).json("could not save user")
 }
-//hash Password
-//generate jsonwebtoken
-
-//save to db
-
-
-  res.send('sign-up post')
 })
 router.delete('/:id',(req,res)=>{
   console.log(req.params)

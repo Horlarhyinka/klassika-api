@@ -1,35 +1,33 @@
 const express = require("express");
 const app = express();
-const mongoose = require('mongoose');
-const axios = require('axios');
-const cors = require('cors');
-const user = require('./models/usermodels.js');
-const bodyparser = require('body-parser');
-const router = require('./controller/routes-controller');
-const logger = require('logger');
-const cookieparser = require("cookieparser");
 const dotenv = require("dotenv");
-const morgan = require("morgan");
-
+const router = require('./controller/routes-controller.js');
+const cookieparser = require('cookie-parser');
+const mongoose = require("mongoose")
+//declaring port variable
+const port = Number(process.env.PORT) || 5000;
+//config .env file
 dotenv.config();
 
-mongoose.promise = global.promise
-//declaring portt variable
-const port = Number(process.env.PORT) || 5000;
-
-//connecting to db:
-mongoose.connect("mongodb://localhost/klassika").then(console.log("connected to db"));
-
-//setting up middlewares
-app.use( morgan )
-app.use( cors );
-app.use(express.static("static"));
-app.use(express.urlencoded({extended: true}));
+//setting up middlewares;
 app.use(express.json());
-app.use("klassica.com/api",router);
-app.use(cookieparser)
+app.use(express.urlencoded({extended: false}));
+app.use(cookieparser());
+app.use(express.static("static"));
+
+//connecting  to db
+mongoose.connect('mongodb+srv://Horlarh:1234@cluster0.syhy6.mongodb.net/?retryWrites=true&w=majority').then(()=>{console.log("connected to db")}).catch((err)=>{
+  console.log("cant connect to db", err)
+})
+//using router middleware
+app.use( router);
+
+app.get('/test',(req,res)=>{
+  res.send("hello")
+})
+
 
 //listening to port
-app.listen( port,()=>{
+app.listen( port ,()=>{
   console.log("now listening on port " + port)
 })

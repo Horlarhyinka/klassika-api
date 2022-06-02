@@ -26,12 +26,17 @@ const userSchema = new Schema({
   }
 })
 //declaring presave functions
-userSchema.pre("create",async function(){
+userSchema.pre("save",async function(){
   //genSalt
-  const salt = await bcrypt.genSalt();
-  //hashing Password
-  const hashedPassword = await bcrypt.hash(salt, this.password);
-  this.password = hashedPassword;
+  try{
+    bcrypt.genSalt(5,(err,salt)=>{
+      bcrypt.hash(salt,this.password,(err,hashedPassword)=>{
+        this.password = hashedPassword
+      })
+    })
+  }catch(err){
+    console.log("could not gen salt", err)
+  }
 })
 
 //creating usermodel from userschema
