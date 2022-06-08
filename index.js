@@ -16,15 +16,17 @@ app.use(cookieparser());
 app.use(express.static("static"));
 
 //connecting  to db
-mongoose.connect('mongodb+srv://Horlarh:1234@cluster0.syhy6.mongodb.net/?retryWrites=true&w=majority').then(()=>{console.log("connected to db")}).catch((err)=>{
+mongoose.connect('mongodb+srv://Horlarh:1234@cluster0.syhy6.mongodb.net/klassika').then(()=>{console.log("connected to db")}).catch((err)=>{
   console.log("cant connect to db", err)
 })
 //using router middleware
 app.use( router);
-
-app.get('/test',(req,res)=>{
-  res.send("hello")
+//error handling middleware
+app.use((err,req,res,next)=>{
+  const Errors = {};
+  console.log(errs)
 })
+
 
 
 //listening to port

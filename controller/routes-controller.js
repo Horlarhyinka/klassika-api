@@ -8,7 +8,7 @@ const User = require('../models/usermodels.js');
 
 
 
-let JWT_SECRET = "my little secret";
+let JWT_SECRET = process.env.JWT_SECRET || "my little secret";
 let maxAge = 60*60*4;
 
 const generateToken = ({_id}) =>{
@@ -16,9 +16,7 @@ const generateToken = ({_id}) =>{
   return token;
 }
 
-const validator = ()=>{
-res.status(400).send("bad request")
-}
+
 
 router.get('/',(req,res)=>{
   res.send("this is home page")
@@ -35,8 +33,7 @@ router.post('/sign-in',(req,res)=>{
   res.send('sign-in post' + req.body)
 })
 
-router.post('/sign-up',async(req,res)=>{
-const { email, Tel, password} = req.body;
+router.post('/sign-up',async(req,res,next)=>{
 try{
   const newUser = await User.create(req.body);
   //
@@ -47,8 +44,7 @@ try{
   res.status(200).json(newUser);
 
 }catch(err){
-  console.log(err)
-  res.status(500).json("could not save user")
+next
 }
 })
 router.delete('/:id',(req,res)=>{
