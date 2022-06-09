@@ -4,6 +4,14 @@ const Joi = require("joi");
 
 const emailRegex = new RegExp('^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$')
 
+const hashPassword = (password) =>{
+  bcrypt.genSalt(5,(err,salt)=>{
+    bcrypt.hash(salt,password,(err,hashedPassword)=>{
+      return hashedPassword;
+    })
+  })
+}
+
 const Schema = mongoose.Schema;
 
 //new user model
@@ -27,10 +35,8 @@ const userSchema = new Schema({
 })
 //declaring presave functions
 userSchema.pre("create",async function(){
-  //genSalt
-  const salt = await bcrypt.genSalt();
   //hashing Password
-  const hashedPassword = await bcrypt.hash(salt, this.password);
+  const hashedPassword = await hashPassword(this.password);
   this.password = hashedPassword;
 })
 
