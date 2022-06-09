@@ -34,8 +34,8 @@ router.post('/sign-in',async(req,res)=>{
 const user = mongoose.findOne(req.body.email);
 const userPassword = user.password;
  if(!bcrypt.compare(req.body.password,userPassword)) res.status(400).json("incorrect password");
-// const loginToken = await generateToken(user);
-// res.cookie("logged-in",loginToken,{httpOnly:true,expiresIn:maxAge*1000});
+const loginToken = await generateToken(user);
+res.cookie("logged-in",loginToken,{httpOnly:true,expiresIn:maxAge*1000});
 res.status(200).json(user);
 
 })
@@ -51,7 +51,14 @@ try{
   res.status(200).json(newUser);
 
 }catch(err){
-next
+  const Errors = {};
+  if (err.keyCode === 1100) res.json("email is already taken");
+  if(err._message.includes("User validation failed")){
+  Object.values(err.errors).forEach(({properties}) =>{
+    Errors[properties.path] = properties.message;
+
+  })}
+  res.json(Errors);
 }
 })
 router.delete('/:id',(req,res)=>{
