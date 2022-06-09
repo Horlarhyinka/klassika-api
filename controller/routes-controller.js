@@ -7,11 +7,13 @@ const bcrypt = require("bcrypt")
 const jwt = require("jsonwebtoken");
 const User = require('../models/usermodels.js');
 
-let JWT_SECRET = process.env.JWT_SECRET;
+
+
+let JWT_SECRET = process.env.JWT_SECRET || "my little secret";
 let maxAge = 60*60*4;
 
 const generateToken = ({_id}) =>{
-  const token = jwt.sign(_id, JWT_SECRET,{maxAge: maxAge});
+  const token = jwt.sign({_id}, JWT_SECRET,{expiresIn: maxAge});
   return token;
 }
 
@@ -39,29 +41,18 @@ res.status(200).json(user);
 })
 
 router.post('/sign-up',async(req,res,next)=>{
-const { email, Tel, password} = req.body;
 try{
   const newUser = await User.create(req.body);
+  //
   const newUserToken = await generateToken(newUser);
-  // res.cookie(userJWT, newUserToken,{httpOnly: true,maxAge: maxAge * 1000 });
-  res.status(200).json(newUser)
+  //send token
+  res.cookie("userJWT", newUserToken,{httpOnly: true,maxAge: maxAge * 1000 });
+  //send user
+  res.status(200).json(newUser);
 
 }catch(err){
-
-  
-  if(err.keyCode === 1100)res.json("email is taken");
-  const Errors = {};
-  Object.values(err.errors).forEach(({properties}) =>{
-    Errors[properties.path] = properties.message;
-    console.log(properties.path, properties.message)});
-    res.json(Errors)
-
- next();
+next
 }
-//hash Password
-//generate jsonwebtoken
-
-//save to db
 })
 router.delete('/:id',(req,res)=>{
   console.log(req.params)
