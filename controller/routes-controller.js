@@ -17,11 +17,20 @@ const generateToken = ({_id}) =>{
   return token;
 }
 
+const validator = (err) =>{
+  if(err._message.includes("User validation failed")){
+    const Errors = {};
+    Object.values(err.errors).forEach(({properties}) =>{
+      Errors[properties.path] = properties.message;
+    })
+    return Errors;
+  }
+}
 
 
 router.get('/',(req,res)=>{
   console.log(req.url);
-  res.json("this is home page");
+  res.json("this is home page"); 
 });
 router.get('/sign-up',(req,res)=>{
   res.sendFile(path.resolve(__dirname,"../views/sign-up.html"));
@@ -51,14 +60,9 @@ try{
   res.status(200).json(newUser);
 
 }catch(err){
-  const Errors = {};
   if (err.keyCode === 1100) res.json("email is already taken");
-  if(err._message.includes("User validation failed")){
-  Object.values(err.errors).forEach(({properties}) =>{
-    Errors[properties.path] = properties.message;
-
-  })}
-  res.json(Errors);
+  
+ res.json(validator(err));  
 }
 })
 router.delete('/:id',(req,res)=>{
