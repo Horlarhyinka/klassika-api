@@ -17,6 +17,15 @@ const generateToken = ({_id}) =>{
   return token;
 }
 
+const validator = (err) =>{
+  if(err._message.includes("User validation failed")){
+    const Errors = {};
+    Object.values(err.errors).forEach(({properties}) =>{
+      Errors[properties.path] = properties.message;
+    })
+    return Errors;
+  }
+}
 
 
 router.get('/',(req,res)=>{
@@ -52,7 +61,6 @@ try{
   res.status(200).json(newUser);
 
 }catch(err){
-  const Errors = {};
   if (err.keyCode === 1100) res.json("email is already taken");
 next(err)
 }
