@@ -40,17 +40,22 @@ router.get('/sign-in',(req,res)=>{
 
 router.post('/sign-in',async(req,res)=>{
   const { email, password } = req.body;
-const user = mongoose.find({email:email});
+const user = await User.findOne({email:email});
+if(user){
 const userPassword = user.password;
  if(!bcrypt.compare(password,userPassword)) res.status(400).json("incorrect password");
 const loginToken = await generateToken(user);
 res.cookie("logged-in",loginToken,{httpOnly:true,expiresIn:maxAge*1000});
-res.status(200).json(user);
+res.status(200).json(user);  
+}else{
+res.status(400).json("sorry, email is not registered")  
+}
+
+
 
 })
 
 router.post('/sign-up',async(req,res,next)=>{
-  console.log(req.body)
 try{
   const newUser = await User.create(req.body);
   //
@@ -61,7 +66,8 @@ try{
   res.status(200).json(newUser);
 
 }catch(err){
-  if (err.keyCode === 1100) res.json("email is already taken");
+  console.log(err)
+  if (err.code === 11000) res.json("email is already taken");
 next(err)
 }
 })

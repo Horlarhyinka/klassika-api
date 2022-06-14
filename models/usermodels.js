@@ -3,21 +3,13 @@ const bcrypt = require('bcrypt');
 const Joi = require("joi");
 
 const emailRegex = new RegExp('^[0-9a-zA-Z./-_*#@!]{3,}@[a-zA-Z@.]{2,}\..[a-zA-Z]{2,}\.$');
-const telRegex = new RegExp('/^[0-9]{11}$/');
+const telRegex = new RegExp('^[0-9]{11}$');
 const validateEmail = (val) =>{
  return emailRegex.test(val);
 }
 const validateTel = (val) =>{
   return telRegex.test(val);
  }
-
-const hashPassword = (password) =>{
-  bcrypt.genSalt(5,(err,salt)=>{
-    bcrypt.hash(salt,password,(err,hashedPassword)=>{
-      return hashedPassword;
-    })
-  })
-}
 
 const Schema = mongoose.Schema;
 
@@ -41,15 +33,14 @@ const userSchema = new Schema({
     validate: [validateTel , "invalid telephone number"]
   }
 })
+
 //declaring presave functions
 userSchema.pre("save",async function(){
   //genSalt
   try{
-    bcrypt.genSalt(5,(err,salt)=>{
-      bcrypt.hash(salt,this.password,(err,hashedPassword)=>{
-        this.password = hashedPassword
-      })
-    })
+   const salt = await bcrypt.genSalt(5);
+   const hashedPassword = await bcrypt.hash(this.password, salt);
+   this.password = hashedPassword;
   }catch(err){
     console.log("could not gen salt", err)
   }
