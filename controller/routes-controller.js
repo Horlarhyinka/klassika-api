@@ -31,7 +31,7 @@ router.get('/sign-in',(req,res)=>{
 
 router.post('/sign-in',async(req,res)=>{
   const { email, password } = req.body;
-const user = mongoose.findOne(email);
+const user = mongoose.find({email:email});
 const userPassword = user.password;
  if(!bcrypt.compare(password,userPassword)) res.status(400).json("incorrect password");
 const loginToken = await generateToken(user);
