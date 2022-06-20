@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>testing cloudinary</title>
+</head>
+<body  style="background-color: rgb(70, 156, 70);text-align: center;">
+    <h1 style="text-align: center;">testing cloudinary</h1>
+    <div style="width:400px ;height: 400px;text-align:center;border:3px solid white;">
+        <img style="height: 100%;width:100%;display: inline-block;" src ="https://ssl.gstatic.com/support/content/images/static/homepage_header_background_v2.svg" alt="image preview" />
+        <input type="file" value="choose file" style="text-align: center;"/>
+    </div>
+    
+    <script>
+        const preview = document.querySelector("img");
+        const input = document.querySelector("input");
+
+       const CLOUDINARY_PRESET = "umhffieh";
+       const cloudName = "lahri"
+
+        input.addEventListener("change", (e)=>{
+            const file = e.target.files[0];
+            const formData = new FormData;
+            formData.append("file",file);
+            formData.append("upload_preset",CLOUDINARY_PRESET);
+            const options = {
+                method:"POST",
+                header:{"Content-Type": "application/x-www-form-urlencoded",
+            mode:"cors"},
+            body:formData
+            };
+            fetch(`https://api.cloudinary.com/v1_1/${cloudName}/upload`,options).then(res=>{
+                    return res.text()
+            }).then(data=>{
+                return JSON.parse(data)
+            }).then(result =>{
+                preview.src = result.url;
+            })
+            .catch(err=>console.log("err:"+ err))
+
+        })
+    </script>
+</body>
+</html>

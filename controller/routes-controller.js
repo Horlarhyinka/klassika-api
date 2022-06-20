@@ -31,12 +31,19 @@ const validator = (err) =>{
 router.get('/',(req,res)=>{
   res.json("this is home page");
 });
+router.get('/test',(req,res)=>{
+  res.sendFile(path.resolve(__dirname, '../views/test.html'));
+});
 router.get('/sign-up',(req,res)=>{
   res.sendFile(path.resolve(__dirname,"../views/sign-up.html"));
 });
 router.get('/sign-in',(req,res)=>{
   res.send('sign-in get')
 });
+
+router.get('/new-auction',(req,res)=>{
+  res.sendFile(path.resolve(__dirname,'../views/newstock.html'))
+})
 
 router.post('/sign-in',async(req,res)=>{
   const { email, password } = req.body;

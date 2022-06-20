@@ -1,0 +1,38 @@
+<html>
+    <head>
+        <title>testing cloudinary</title>
+    </head>
+    <h1>lets place ur vehicle on auction </h1>
+    <form>
+        <label for="type">vehicle type</label>
+
+        <input name="" id="type" placeholder="e.g truck,car,bus..." type="text" /> 
+        <label for="model">vehicle model</label>
+        <input name="model" id="model" type="text" /> 
+        <label for="brand"  >vehicle brand</label>
+        <input name="brand" id="brand" type="text" placeholder="e.g volks, audi, toyota..." /> 
+        <label for="color"  >Color</label>
+        <input name="color" id="color" placeholder="e.g red, blue, light-cyan..." type="text" /> 
+        <label for="miles">Miles</label>
+        <input name="miles" id="miles" type="text" placeholder="miles on your vehicle e.g 2000km, input 0km if new" /> 
+        <label for="image"  > please attach a clear image of vehicle *</label>
+        <input name="image" id="image" type="file"/> 
+        <label for="moreInfo"  ></label>
+        <text-area name="moreInfo" id="moreInfo" type="text" placeholder="tell us more about your vehicle"/>
+
+    </form>
+    <body>
+        <script>
+           let type = document.getElementById("type");
+           let model = document.getElementById("model");
+           let brand = document.getElementById("brand");
+           let color = document.getElementById("color");
+           let miles = document.getElementById("miles");
+           let image = document.getElementById("image");
+           let moreInfo = document.getElementById("moreInfo");
+
+           CLOUDINARY_URL="cloudinary://594777649387224:m3tIWkEVkXMkiWizxTYN20iEfVM@lahri"
+            </script>
+     
+    </body>
+</html>
