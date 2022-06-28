@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const Joi = require("joi");
 
-const emailRegex = new RegExp('^[0-9a-zA-Z./-_*#@!]{3,}@[a-zA-Z@.]{2,}\..[a-zA-Z]{2,}\.$');
+const emailRegex = new RegExp('^[0-9a-zA-Z./-_*#@!]{3,}@[a-zA-Z@.]{2,}\..[a-zA-Z]{1,}\.$');
 const telRegex = new RegExp('^[0-9]{11}$');
 const validateEmail = (val) =>{
  return emailRegex.test(val);

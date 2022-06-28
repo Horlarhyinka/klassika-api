@@ -6,7 +6,7 @@
     <form>
         <label for="type">vehicle type</label>
 
-        <input name="" id="type" placeholder="e.g truck,car,bus..." type="text" /> 
+        <input name="type" id="type" placeholder="e.g truck,car,bus..." type="text" /> 
         <label for="model">vehicle model</label>
         <input name="model" id="model" type="text" /> 
         <label for="brand"  >vehicle brand</label>
@@ -16,10 +16,11 @@
         <label for="miles">Miles</label>
         <input name="miles" id="miles" type="text" placeholder="miles on your vehicle e.g 2000km, input 0km if new" /> 
         <label for="image"  > please attach a clear image of vehicle *</label>
-        <input name="image" id="image" type="file"/> 
         <label for="moreInfo"  ></label>
-        <text-area name="moreInfo" id="moreInfo" type="text" placeholder="tell us more about your vehicle"/>
-
+        <textarea name="moreInfo" id="moreInfo" rows="4" cols="50" type="text" placeholder="tell us more about your vehicle"></textarea>
+        <input name="image" id="image" type="file"/> <br>
+        <button>Submit</button>
+        
     </form>
     <body>
         <script>
@@ -31,7 +32,30 @@
            let image = document.getElementById("image");
            let moreInfo = document.getElementById("moreInfo");
 
-           CLOUDINARY_URL="cloudinary://594777649387224:m3tIWkEVkXMkiWizxTYN20iEfVM@lahri"
+           const CLOUDINARY_NAME = "lahri";
+           const CLOUDINARY_URL= `https://api/cloudinary.com/v1_1/${CLOUDINARY_NAME}/upload`;
+           //storin text values
+
+           const textFields = {};
+           const imageFile = {};
+
+           document.querySelector("form").addEventListener("change",(e)=>{
+            if(e.target.type == "file"){
+                imageFile[e.target.name] = e.target.files[0];
+                return imageFile;
+            }else{
+              textFields[e.target.name] = e.target.value;
+              return textFields;
+            }
+           });
+
+           document.querySelector("form").addEventListener("change",()=>{
+
+            
+           })
+
+
+
             </script>
      
     </body>
